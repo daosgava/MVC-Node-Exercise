@@ -8,7 +8,7 @@ app.set("views", "./views");
 app.use(express.static("public"));
 
 app.get("/", (_, res) => {
-  res.render("index.html", { title: "Welcome" }); // Render dynamic .html file
+  res.render("index.html", { title: "Welcome" });
 });
 
 app.listen(port, () => {

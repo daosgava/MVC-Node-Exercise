@@ -9,14 +9,13 @@ app.get("/", async (_, res) => {
     <h1>Welcome</h1>
     <p>Use the following endpoints to perform math operations:</p>
     <ul>
-      <li>/add?a=4&b=5</li>
-      <li>/sub?a=4&b=5</li>
-      <li>/mul?a=4&b=5</li>
-      <li>/div?a=4&b=5</li>
-      <li>/mod?a=4&b=5</li>
+      <li>For addition: <a href="/add?a=777&b=666">/add?a=777&b=666</a>
+      <li>For subtraction: <a href="/sub?a=777&b=666">/sub?a=777&b=666</a>
+      <li>For multiplication: <a href="/mul?a=777&b=666">/mul?a=777&b=666</a>
+      <li>For division: <a href="/div?a=777&b=666">/div?a=777&b=666</a>
+      <li>For modulo: <a href="/mod?a=777&b=666">/mod?a=777&b=666</a>
     </ul>
-    <p>Use the /results endpoint to view the results of the math operations.</p>
-    <h2>Results</h2>
+    <h2>Results stored in the database:</h2>
     <ul>
       ${results
         .map(

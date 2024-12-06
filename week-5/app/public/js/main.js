@@ -33,7 +33,8 @@ const createNotification = (notificationId, type, message, seen) => {
 
 const updateBadgeNumber = (notifications) => {
   const badgeElement = document.querySelector(".collapsible-header .badge");
-  badgeElement.textContent = notifications.length;
+  const countUnseen = notifications.filter((notification) => !notification.seen).length;
+  badgeElement.textContent = countUnseen;
 };
 
 const drawNotifications = async (userId) => {

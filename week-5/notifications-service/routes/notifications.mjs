@@ -5,7 +5,7 @@ const router = express.Router();
 
 router.get("/", notificationsController.getNotifications);
 router.post("/", notificationsController.saveNotification);
-router.put("/", notificationsController.markNotificationAsSeen);
-router.delete("/", notificationsController.deleteNotification);
+router.put("/seen", notificationsController.markNotificationAsSeen);
+router.delete("/delete", notificationsController.deleteNotification);
 
 export default router;

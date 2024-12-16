@@ -1,0 +1,26 @@
+.main-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+}
+
+.collapsible-body {
+  padding: 0;
+}
+
+.notification-item {
+  display: flex!important;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+}
+
+.seen {
+  background-color: #f0f0f0!important;
+}
+
+.unseen {
+  background-color: #fff!important;
+}

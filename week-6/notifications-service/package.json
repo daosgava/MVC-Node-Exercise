@@ -1,0 +1,22 @@
+{
+  "name": "notifications-service",
+  "version": "1.0.0",
+  "main": "index.mjs",
+  "scripts": {
+    "test": "node --env-file=.env --test",
+    "test:watch": "node --env-file=.env --test --watch",
+    "dev": "nodemon --env-file=.env index.mjs"
+  },
+  "author": "Daniel Garcia",
+  "license": "ISC",
+  "description": "",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "express": "^4.21.1",
+    "mongodb": "6.11",
+    "undici": "^7.1.0"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.7"
+  }
+}

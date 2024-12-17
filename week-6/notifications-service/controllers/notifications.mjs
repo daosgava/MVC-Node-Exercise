@@ -18,7 +18,6 @@ const saveNotification = async (req, res) => {
     }
     res.send("Notification saved");
   } catch (error) {
-    console.error(error);
     res.status(500).send("Internal server error");
   }
 };
@@ -29,7 +28,6 @@ const getNotifications = async (req, res) => {
     const notifications = await notificationsModel.getNotifications(userId);
     res.send(notifications);
   } catch (error) {
-    console.error(error);
     res.status(500).send("Internal server error");
   }
 };
@@ -50,7 +48,6 @@ const markNotificationAsSeen = async (req, res) => {
     }
     res.send("Notification marked as seen");
   } catch (error) {
-    console.error(error);
     res.status(500).send("Internal server error");
   }
 };
@@ -71,7 +68,6 @@ const deleteNotification = async (req, res) => {
     }
     res.send("Notification deleted");
   } catch (error) {
-    console.error(error);
     res.status(500).send("Internal server error");
   }
 };

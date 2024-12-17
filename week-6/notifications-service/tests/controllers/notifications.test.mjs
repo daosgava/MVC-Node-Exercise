@@ -1,25 +1,30 @@
-import { describe, it, mock } from "node:test";
+import { describe, it, mock, beforeEach, afterEach } from "node:test";
 import { strictEqual, deepStrictEqual } from "node:assert/strict";
 import notificationsController from "../../controllers/notifications.mjs";
 import notificationsModel from "../../models/notifications.mjs";
 
 describe("Notifications Controller", () => {
+  let res;
+  let req;
+  beforeEach(() => {
+    res = {
+      send: mock.fn(),
+      status: mock.fn(() => res),
+    };
+
+    req = {
+      body: {
+        userId: 1,
+        type: "info",
+        message: "Hello, world!",
+      },
+    };
+  });
+  afterEach(() => {
+    mock.restoreAll();
+  });
   describe("saveNotification", () => {
     it("should save a notification", async () => {
-      const req = {
-        body: {
-          userId: 1,
-          type: "info",
-          message: "Hello, world!",
-        },
-      };
-
-      // Mock the response object
-      const res = {
-        send: mock.fn(),
-        status: mock.fn(() => res),
-      };
-
       // Mock the saveNotification method from the notificationsModel
       mock.method(notificationsModel, "saveNotification", () => ({
         acknowledged: true,
@@ -31,26 +36,10 @@ describe("Notifications Controller", () => {
       // Check if the saveNotification method was called with the correct arguments
       strictEqual(res.send.mock.calls.length, 1);
       // Check if the response was sent with the correct message
-      strictEqual(
-        res.send.mock.calls[0].arguments[0],
-        "Notification saved",
-      );
+      strictEqual(res.send.mock.calls[0].arguments[0], "Notification saved");
     });
 
     it("should return an error if the notification was not saved", async () => {
-      const req = {
-        body: {
-          userId: 1,
-          type: "info",
-          message: "Hello, world!",
-        },
-      };
-
-      const res = {
-        send: mock.fn(),
-        status: mock.fn(() => res),
-      };
-
       // Mock the saveNotification method from the notificationsModel
       mock.method(notificationsModel, "saveNotification", () => ({
         acknowledged: true,
@@ -69,19 +58,6 @@ describe("Notifications Controller", () => {
     });
 
     it("should return an error if an internal server error occurs", async () => {
-      const req = {
-        body: {
-          userId: 1,
-          type: "info",
-          message: "Hello, world!",
-        },
-      };
-
-      const res = {
-        send: mock.fn(),
-        status: mock.fn(() => res),
-      };
-
       // Mock the saveNotification method from the notificationsModel
       mock.method(notificationsModel, "saveNotification", () => {
         throw new Error("Internal server error");
@@ -92,24 +68,16 @@ describe("Notifications Controller", () => {
       strictEqual(res.status.mock.calls.length, 1);
       strictEqual(res.status.mock.calls[0].arguments[0], 500);
       strictEqual(res.send.mock.calls.length, 1);
-      strictEqual(
-        res.send.mock.calls[0].arguments[0],
-        "Internal server error",
-      );
+      strictEqual(res.send.mock.calls[0].arguments[0], "Internal server error");
     });
   });
 
   describe("getNotifications", () => {
     it("should get notifications", async () => {
-      const req = {
+      req = {
         query: {
           userId: 1,
         },
-      };
-
-      const res = {
-        send: mock.fn(),
-        status: mock.fn(() => res),
       };
 
       // Mock the getNotifications method from the notificationsModel
@@ -136,17 +104,6 @@ describe("Notifications Controller", () => {
     });
 
     it("should return an error if an internal server error occurs", async () => {
-      const req = {
-        query: {
-          userId: 1,
-        },
-      };
-
-      const res = {
-        send: mock.fn(),
-        status: mock.fn(() => res),
-      };
-
       mock.method(notificationsModel, "getNotifications", () => {
         throw new Error("Internal server error");
       });
@@ -156,24 +113,16 @@ describe("Notifications Controller", () => {
       strictEqual(res.status.mock.calls.length, 1);
       strictEqual(res.status.mock.calls[0].arguments[0], 500);
       strictEqual(res.send.mock.calls.length, 1);
-      strictEqual(
-        res.send.mock.calls[0].arguments[0],
-        "Internal server error",
-      );
+      strictEqual(res.send.mock.calls[0].arguments[0], "Internal server error");
     });
   });
 
   describe("markNotificationAsSeen", () => {
     it("should mark a notification as seen", async () => {
-      const req = {
+      req = {
         query: {
-          notificationId: "1",
+          userId: 1,
         },
-      };
-
-      const res = {
-        send: mock.fn(),
-        status: mock.fn(() => res),
       };
 
       mock.method(notificationsModel, "markNotificationAsSeen", () => ({
@@ -191,15 +140,10 @@ describe("Notifications Controller", () => {
     });
 
     it("should return an error if the notification was not found", async () => {
-      const req = {
+      req = {
         query: {
-          notificationId: "1",
+          userId: 1,
         },
-      };
-
-      const res = {
-        send: mock.fn(),
-        status: mock.fn(() => res),
       };
 
       mock.method(notificationsModel, "markNotificationAsSeen", () => ({
@@ -219,17 +163,6 @@ describe("Notifications Controller", () => {
     });
 
     it("should return an error if an internal server error occurs", async () => {
-      const req = {
-        query: {
-          notificationId: "1",
-        },
-      };
-
-      const res = {
-        send: mock.fn(),
-        status: mock.fn(() => res),
-      };
-
       mock.method(notificationsModel, "markNotificationAsSeen", () => {
         throw new Error("Internal server error");
       });
@@ -239,24 +172,16 @@ describe("Notifications Controller", () => {
       strictEqual(res.status.mock.calls.length, 1);
       strictEqual(res.status.mock.calls[0].arguments[0], 500);
       strictEqual(res.send.mock.calls.length, 1);
-      strictEqual(
-        res.send.mock.calls[0].arguments[0],
-        "Internal server error",
-      );
+      strictEqual(res.send.mock.calls[0].arguments[0], "Internal server error");
     });
   });
 
   describe("deleteNotification", () => {
     it("should delete a notification", async () => {
-      const req = {
+      req = {
         query: {
-          notificationId: "1",
+          userId: 1,
         },
-      };
-
-      const res = {
-        send: mock.fn(),
-        status: mock.fn(() => res),
       };
 
       mock.method(notificationsModel, "deleteNotification", () => ({
@@ -267,22 +192,14 @@ describe("Notifications Controller", () => {
       await notificationsController.deleteNotification(req, res);
 
       strictEqual(res.send.mock.calls.length, 1);
-      strictEqual(
-        res.send.mock.calls[0].arguments[0],
-        "Notification deleted",
-      );
+      strictEqual(res.send.mock.calls[0].arguments[0], "Notification deleted");
     });
 
     it("should return an error if the notification was not found", async () => {
-      const req = {
+      req = {
         query: {
-          notificationId: "1",
+          userId: 1,
         },
-      };
-
-      const res = {
-        send: mock.fn(),
-        status: mock.fn(() => res),
       };
 
       mock.method(notificationsModel, "deleteNotification", () => ({
@@ -302,17 +219,6 @@ describe("Notifications Controller", () => {
     });
 
     it("should return an error if an internal server error occurs", async () => {
-      const req = {
-        query: {
-          notificationId: "1",
-        },
-      };
-
-      const res = {
-        send: mock.fn(),
-        status: mock.fn(() => res),
-      };
-
       mock.method(notificationsModel, "deleteNotification", () => {
         throw new Error("Internal server error");
       });
@@ -322,10 +228,7 @@ describe("Notifications Controller", () => {
       strictEqual(res.status.mock.calls.length, 1);
       strictEqual(res.status.mock.calls[0].arguments[0], 500);
       strictEqual(res.send.mock.calls.length, 1);
-      strictEqual(
-        res.send.mock.calls[0].arguments[0],
-        "Internal server error",
-      );
+      strictEqual(res.send.mock.calls[0].arguments[0], "Internal server error");
     });
   });
 });

@@ -1,28 +1,32 @@
-import { describe, it, mock } from "node:test";
+import { describe, it, mock, beforeEach, afterEach } from "node:test";
 import assert from "node:assert/strict";
 import notificationsModel from "../../models/notifications.mjs";
-import client, { ObjectId } from "../../utils/DatabaseClient.mjs";
-
-mock.fn(client, "connect", async () => {});
-mock.fn(client, "close", async () => {});
-mock.fn(client, "db", () => ({
-  collection: () => ({
-    insertOne: () => ({
-      acknowledged: true,
-      insertedCount: 1,
-    }),
-  }),
-}));
+import client from "../../utils/DatabaseClient.mjs";
 
 describe("Notifications Model", () => {
+  let doc;
+  beforeEach(() => {
+    doc = {
+      userId: 1,
+      type: "info",
+      message: "Hello, world!",
+    };
+    mock.fn(client, "connect", async () => {});
+    mock.fn(client, "close", async () => {});
+    mock.fn(client, "db", () => ({
+      collection: () => ({
+        insertOne: () => ({
+          acknowledged: true,
+          insertedCount: 1,
+        }),
+      }),
+    }));
+  });
+  afterEach(() => {
+    mock.restoreAll();
+  });
   describe("saveNotification", () => {
     it("should save a notification", async () => {
-      const doc = {
-        userId: 1,
-        type: "info",
-        message: "Hello, world!",
-      };
-
       const result = await notificationsModel.saveNotification(doc);
 
       // Check if operation was acknowledged
@@ -32,12 +36,6 @@ describe("Notifications Model", () => {
     });
 
     it("should throw an error if the operation fails", async () => {
-      const doc = {
-        userId: 1,
-        type: "info",
-        message: "Hello, world!",
-      };
-
       mock.fn(client, "db", () => ({
         collection: () => ({
           insertOne: () => {

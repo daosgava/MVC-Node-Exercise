@@ -2,9 +2,14 @@
   "name": "notifications-service",
   "version": "1.0.0",
   "main": "index.mjs",
+  "engines": {
+    "node": ">=22.0.0"
+  },
   "scripts": {
     "test": "node --env-file=.env --test",
     "test:watch": "node --env-file=.env --test --watch",
+    "test:report": "node --env-file=.env --test --test-reporter tap",
+    "test:coverage": "node --env-file=.env --test --experimental-test-coverage",
     "dev": "nodemon --env-file=.env index.mjs"
   },
   "author": "Daniel Garcia",

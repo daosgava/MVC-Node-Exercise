@@ -1,7 +1,7 @@
 /* node:coverage disable */
 
 import { describe, it, mock, beforeEach, afterEach } from "node:test";
-import assert from "node:assert/strict";
+import { strictEqual, equal } from "node:assert/strict";
 import notificationsModel from "../../models/notifications.mjs";
 import client from "../../utils/DatabaseClient.mjs";
 
@@ -36,9 +36,9 @@ describe("Notifications Model", () => {
       const result = await notificationsModel.saveNotification(doc);
 
       // Check if operation was acknowledged
-      assert.strictEqual(result.acknowledged, true);
+      strictEqual(result.acknowledged, true);
       // Check if one document was inserted
-      assert.strictEqual(typeof result.insertedId, "object");
+      strictEqual(typeof result.insertedId, "object");
     });
 
     it("should throw an error if the operation fails", async () => {
@@ -53,7 +53,7 @@ describe("Notifications Model", () => {
       try {
         await notificationsModel.saveNotification(doc);
       } catch (error) {
-        assert.strictEqual(error.message, "Database connection failed");
+        strictEqual(error.message, "Database connection failed");
       }
     });
   });
@@ -63,8 +63,8 @@ describe("Notifications Model", () => {
       const userId = 1;
 
       const result = await notificationsModel.getNotifications(userId);
-      assert.strictEqual(result.length > 0, true);
-      assert.strictEqual(result[0].userId, userId);
+      strictEqual(result.length > 0, true);
+      strictEqual(result[0].userId, userId);
     });
 
     it("should throw an error if the operation fails", async ({ assert }) => {
@@ -83,7 +83,7 @@ describe("Notifications Model", () => {
       try {
         await notificationsModel.getNotifications(userId);
       } catch (error) {
-        assert.strictEqual(error.message, "Database connection failed");
+        strictEqual(error.message, "Database connection failed");
       }
     });
   });
@@ -103,7 +103,7 @@ describe("Notifications Model", () => {
       try {
         await notificationsModel.markNotificationAsSeen(notificationId);
       } catch (error) {
-        assert.strictEqual(error.message, "Database connection failed");
+        strictEqual(error.message, "Database connection failed");
       }
     });
   });
@@ -114,7 +114,7 @@ describe("Notifications Model", () => {
       const result = await notificationsModel.deleteNotification(
         notificationId,
       );
-      assert.equal(result.acknowledged, true);
+      equal(result.acknowledged, true);
     });
 
     it("should throw an error if the operation fails", async () => {
@@ -130,7 +130,7 @@ describe("Notifications Model", () => {
       try {
         await notificationsModel.deleteNotification(notificationId);
       } catch (error) {
-        assert.equal(error.message, "Database connection failed");
+        equal(error.message, "Database connection failed");
       }
     });
   });

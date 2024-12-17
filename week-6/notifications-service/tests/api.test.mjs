@@ -6,8 +6,6 @@ import { request } from 'undici';
 
 describe('api/notifications', { concurrency: true }, () => {
   it('should retrieve data', async () => {
-
-    // Test the GET /api/notifications endpoint
     // If the server is running, returns a 200 status code
     try {
         const endpoint = 'api/notifications?userId=1';
@@ -16,6 +14,5 @@ describe('api/notifications', { concurrency: true }, () => {
     } catch (error) {
         strictEqual(error.code, "ECONNREFUSED");
     }
-
   });
 });

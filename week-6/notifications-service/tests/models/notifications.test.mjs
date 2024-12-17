@@ -1,7 +1,7 @@
 import { describe, it, mock, beforeEach, afterEach } from "node:test";
 import assert from "node:assert/strict";
 import notificationsModel from "../../models/notifications.mjs";
-import client from "../../utils/DatabaseClient.mjs";
+import client, { ObjectId } from "../../utils/DatabaseClient.mjs";
 
 describe("Notifications Model", () => {
   let doc;
@@ -18,6 +18,10 @@ describe("Notifications Model", () => {
         insertOne: () => ({
           acknowledged: true,
           insertedCount: 1,
+        }),
+        deleteOne: () => ({
+          acknowledged: true,
+          deletedCount: 1,
         }),
       }),
     }));
@@ -98,6 +102,33 @@ describe("Notifications Model", () => {
         await notificationsModel.markNotificationAsSeen(notificationId);
       } catch (error) {
         assert.strictEqual(error.message, "Database connection failed");
+      }
+    });
+  });
+
+  describe("deleteNotification", () => {
+    it("should delete a notification", async () => {
+      const notificationId = "67527013a195525bb5b63633";
+      const result = await notificationsModel.deleteNotification(
+        notificationId,
+      );
+      assert.equal(result.acknowledged, true);
+    });
+
+    it("should throw an error if the operation fails", async () => {
+      const notificationId = "67527013a195525bb5b63633";
+      mock.fn(client, "db", () => ({
+        collection: () => ({
+          deleteOne: () => {
+            throw new Error("Database connection failed");
+          },
+        }),
+      }));
+
+      try {
+        await notificationsModel.deleteNotification(notificationId);
+      } catch (error) {
+        assert.equal(error.message, "Database connection failed");
       }
     });
   });

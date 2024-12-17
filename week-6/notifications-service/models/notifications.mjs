@@ -52,6 +52,7 @@ const deleteNotification = async (notificationId) => {
     await client.connect();
     const objectId = ObjectId.createFromHexString(notificationId);
     const result = await results.deleteOne({ _id: objectId });
+
     return result;
   } finally {
     await client.close();

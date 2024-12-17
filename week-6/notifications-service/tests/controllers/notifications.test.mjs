@@ -1,3 +1,5 @@
+/* node:coverage disable */
+
 import { describe, it, mock, beforeEach, afterEach } from "node:test";
 import { strictEqual, deepStrictEqual } from "node:assert/strict";
 import notificationsController from "../../controllers/notifications.mjs";

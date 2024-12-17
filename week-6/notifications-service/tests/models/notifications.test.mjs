@@ -1,7 +1,9 @@
+/* node:coverage disable */
+
 import { describe, it, mock, beforeEach, afterEach } from "node:test";
 import assert from "node:assert/strict";
 import notificationsModel from "../../models/notifications.mjs";
-import client, { ObjectId } from "../../utils/DatabaseClient.mjs";
+import client from "../../utils/DatabaseClient.mjs";
 
 describe("Notifications Model", () => {
   let doc;

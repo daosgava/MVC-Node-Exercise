@@ -1,11 +1,21 @@
 import express from "express";
-import notificationsController from "../controllers/notifications.mjs";
+import getNotificationsController from "../controllers/notifications.mjs";
+import getNotificationsModel from "../models/notifications.mjs";
+import { client, ObjectId } from "../utils/DatabaseClient.mjs";
 
 const router = express.Router();
 
-router.get("/", notificationsController.getNotifications);
-router.post("/", notificationsController.saveNotification);
-router.put("/seen", notificationsController.markNotificationAsSeen);
-router.delete("/delete", notificationsController.deleteNotification);
+const notificationsModel = getNotificationsModel({ client, ObjectId });
+const {
+    getNotifications,
+    saveNotification,
+    markNotificationAsSeen,
+    deleteNotification,
+} = getNotificationsController({ notificationsModel });
+
+router.get("/", getNotifications);
+router.post("/", saveNotification);
+router.put("/seen", markNotificationAsSeen);
+router.delete("/delete", deleteNotification);
 
 export default router;

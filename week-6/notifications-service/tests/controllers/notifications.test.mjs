@@ -2,13 +2,26 @@
 
 import { describe, it, mock, beforeEach, afterEach } from "node:test";
 import { strictEqual, deepStrictEqual } from "node:assert/strict";
-import notificationsController from "../../controllers/notifications.mjs";
-import notificationsModel from "../../models/notifications.mjs";
+import getNotificationsController from "../../controllers/notifications.mjs";
+
+// Mock the notificationsModel
+const notificationsModel = {
+  saveNotification: mock.fn(),
+  getNotifications: mock.fn(),
+  markNotificationAsSeen: mock.fn(),
+  deleteNotification: mock.fn(),
+};
+
+// Initialize the notificationsController
+const notificationsController = getNotificationsController({
+  notificationsModel,
+});
 
 describe("Notifications Controller", () => {
   let res;
   let req;
   beforeEach(() => {
+    // Set initial state
     res = {
       send: mock.fn(),
       status: mock.fn(() => res),
@@ -25,14 +38,15 @@ describe("Notifications Controller", () => {
   afterEach(() => {
     mock.restoreAll();
   });
-  describe("saveNotification", () => {
+  describe("saveNotification", (t) => {
     it("should save a notification", async () => {
       // Mock the saveNotification method from the notificationsModel
-      mock.method(notificationsModel, "saveNotification", () => ({
+      notificationsModel.saveNotification.mock.mockImplementationOnce(() => ({
         acknowledged: true,
         insertedCount: 1,
       }));
 
+      // Call the saveNotification method from the notificationsController
       await notificationsController.saveNotification(req, res);
 
       // Check if the saveNotification method was called with the correct arguments
@@ -43,11 +57,12 @@ describe("Notifications Controller", () => {
 
     it("should return an error if the notification was not saved", async () => {
       // Mock the saveNotification method from the notificationsModel
-      mock.method(notificationsModel, "saveNotification", () => ({
+      notificationsModel.saveNotification.mock.mockImplementationOnce(() => ({
         acknowledged: true,
         insertedCount: 0,
       }));
 
+      // Call the saveNotification method from the notificationsController
       await notificationsController.saveNotification(req, res);
 
       strictEqual(res.status.mock.calls.length, 1);
@@ -61,7 +76,7 @@ describe("Notifications Controller", () => {
 
     it("should return an error if an internal server error occurs", async () => {
       // Mock the saveNotification method from the notificationsModel
-      mock.method(notificationsModel, "saveNotification", () => {
+      notificationsModel.saveNotification.mock.mockImplementationOnce(() => {
         throw new Error("Internal server error");
       });
 
@@ -83,7 +98,7 @@ describe("Notifications Controller", () => {
       };
 
       // Mock the getNotifications method from the notificationsModel
-      mock.method(notificationsModel, "getNotifications", () => [
+      notificationsModel.getNotifications.mock.mockImplementationOnce(() => [
         {
           _id: "1",
           type: "info",
@@ -106,7 +121,7 @@ describe("Notifications Controller", () => {
     });
 
     it("should return an error if an internal server error occurs", async () => {
-      mock.method(notificationsModel, "getNotifications", () => {
+      notificationsModel.getNotifications.mock.mockImplementationOnce(() => {
         throw new Error("Internal server error");
       });
 
@@ -127,7 +142,7 @@ describe("Notifications Controller", () => {
         },
       };
 
-      mock.method(notificationsModel, "markNotificationAsSeen", () => ({
+      notificationsModel.markNotificationAsSeen.mock.mockImplementationOnce(() => ({
         acknowledged: true,
         modifiedCount: 1,
       }));
@@ -148,7 +163,7 @@ describe("Notifications Controller", () => {
         },
       };
 
-      mock.method(notificationsModel, "markNotificationAsSeen", () => ({
+      notificationsModel.markNotificationAsSeen.mock.mockImplementationOnce(() => ({
         acknowledged: true,
         modifiedCount: 0,
       }));
@@ -165,7 +180,7 @@ describe("Notifications Controller", () => {
     });
 
     it("should return an error if an internal server error occurs", async () => {
-      mock.method(notificationsModel, "markNotificationAsSeen", () => {
+      notificationsModel.markNotificationAsSeen.mock.mockImplementationOnce(() => {
         throw new Error("Internal server error");
       });
 
@@ -186,7 +201,7 @@ describe("Notifications Controller", () => {
         },
       };
 
-      mock.method(notificationsModel, "deleteNotification", () => ({
+      notificationsModel.deleteNotification.mock.mockImplementationOnce(() => ({
         acknowledged: true,
         deletedCount: 1,
       }));
@@ -204,7 +219,7 @@ describe("Notifications Controller", () => {
         },
       };
 
-      mock.method(notificationsModel, "deleteNotification", () => ({
+      notificationsModel.deleteNotification.mock.mockImplementationOnce(() => ({
         acknowledged: true,
         deletedCount: 0,
       }));
@@ -221,7 +236,7 @@ describe("Notifications Controller", () => {
     });
 
     it("should return an error if an internal server error occurs", async () => {
-      mock.method(notificationsModel, "deleteNotification", () => {
+      notificationsModel.deleteNotification.mock.mockImplementationOnce(() => {
         throw new Error("Internal server error");
       });
 

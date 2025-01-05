@@ -7,7 +7,6 @@ const createNotification = (userId, notificationId, type, message, seen) => {
     link.className = `collection-item notification-item blue-text text-darken-2 ${seen ? "seen" : "unread"}`;
     link.textContent = message;
     link.onmouseover = async () => {
-      console.log("onmouseover", seen);
       if (!seen) {
         await markNotificationAsSeen(notificationId);
         drawNotifications(userId);

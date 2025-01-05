@@ -15,6 +15,7 @@ const getNotificationsController = ({ notificationsModel }) => {
         res.status(400).send("Notification not saved");
         return;
       }
+      req.app.get("io").emit("new-notification");
       res.send("Notification saved");
     } catch (error) {
       res.status(500).send("Internal server error");

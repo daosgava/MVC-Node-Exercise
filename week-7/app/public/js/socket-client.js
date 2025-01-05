@@ -1,13 +1,12 @@
-const initializeListeners = () => {
+import { drawNotifications } from "./notifications.js";
+
+const initializeWebSocket = () => {
   const socket = io("http://localhost:3000");
 
-  socket.on('connect', () => {
-    console.log('Connected to backend');
-  });
-
-  socket.on("heart-beat", (data) => {
-    console.log(data);
+  socket.on("new-notification", () => {
+    const userId = 3;
+    drawNotifications(userId);
   });
 };
 
-initializeListeners();
+export default initializeWebSocket;
